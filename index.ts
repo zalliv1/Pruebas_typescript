@@ -1,21 +1,40 @@
-import express, { Request, Response } from "express";
+import express from "express";
+import { Router, Request, Response } from "express";
+import { addBusinessTime } from "./utils/businessDays";
+import { DateTime } from "luxon";
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
-app.use(express.json());
-
-// Ruta principal
-app.get("/", (req: Request, res: Response) => {
-  res.send("🚀 Hola desde mi API REST con TypeScript en Replit! prueba de cambio");
+// Ruta principal (opcional)
+app.get("/", (req, res) => {
+  res.send("🚀 API en funcionamiento. Usa /calculate para probar.");
 });
 
-// Ejemplo: saludo dinámico
-app.get("/saludo/:nombre", (req: Request, res: Response) => {
-  const nombre = req.params.nombre;
-  res.json({ mensaje: `Hola, ${nombre}!` });
+// Ruta de cálculo
+app.get("/calculate", async (req: Request, res: Response) => {
+
+  try {
+    const { days, hours, date } = req.query;
+
+    const result = await addBusinessTime({
+      days: days ? parseInt(days as string, 10) : undefined,
+      hours: hours ? parseInt(hours as string, 10) : undefined,
+      date: date ? (date as string) : undefined,
+    });
+
+    return res.json(result);
+  } catch (error: any) {
+    return res.status(400).json({
+      error: "InvalidParameters",
+      message: error.message,
+    });
+  }
 });
 
+// Iniciar servidor
 app.listen(PORT, () => {
-  console.log(`✅ Servidor corriendo en http://localhost:${PORT}`);
+  console.log(`Servidor escuchando en puerto ${PORT}`);
 });
+
+export default app;
