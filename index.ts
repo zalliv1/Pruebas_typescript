@@ -1,6 +1,6 @@
 import express from "express";
 import { Router, Request, Response } from "express";
-import { addBusinessTime } from "./utils/businessDays";
+import { addBusinessTime } from "./utils/businessDays.ts";
 import { DateTime } from "luxon";
 
 const app = express();
