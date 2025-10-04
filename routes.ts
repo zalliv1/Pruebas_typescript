@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { addBusinessTime } from "./utils/businessDays";
+import { addBusinessTime } from "./utils/businessDays.ts";
 
 export const router = Router();
 
